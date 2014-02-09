@@ -1,0 +1,19 @@
+{
+  "name": "angular-simpleValidator",
+  "version": "0.0.1",
+  "description": "AngularJS simple validator.",
+  "homepage": "https://github.com/achouippe/angular-simpleValidator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/achouippe/angular-simpleValidator"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.3.0",
+    "grunt-contrib-connect": "~0.2.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-livereload": "~0.1.2",
+    "matchdep": "~0.1.1",
+    "bower": "1.2.8"
+  }
+}
