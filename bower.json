@@ -1,0 +1,22 @@
+{
+  "name": "angular-simpleValidator",
+  "version": "0.0.1",
+  "homepage": "https://github.com/achouippe/angular-simpleValidator",
+  "description": "simple validator service for AngularJS",
+  "main": "src/validator.js",
+  "keywords": [
+    "angularJS",
+    "validator"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.2.12"
+  }
+}
