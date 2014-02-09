@@ -1,4 +1,4 @@
 angular-simpleValidator
 =======================
 
-Controller side validator service
+Simple controller-side validator for AngularJS.
