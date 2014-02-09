@@ -5,19 +5,16 @@ module.exports = function (grunt) {
 	// load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-  var packageJson = require('./package.json');
-
   var validatorConfig = {
     src: 'src',
     sampleApp: 'sampleapp',
     dist: 'dist',
-    test: 'test',
-    version: packageJson.version,
-    homepage: packageJson.homepage
+    test: 'test'
   };
 
   grunt.initConfig({
     validator: validatorConfig,
+    pkg: grunt.file.readJSON('package.json'),
     jshint: {
       options: {
         jshintrc: '.jshintrc'
@@ -47,7 +44,7 @@ module.exports = function (grunt) {
           dest: '<%= validator.dist %>/',
           src: '<%= validator.src %>/validator.js',
           rename: function(dest, src) {
-            return dest + src.replace(/\./, '-<%=validator.version%>.');
+            return dest + src.replace(/\./, '-<%=pkg.version%>.');
           }
         }]
       }
@@ -55,12 +52,13 @@ module.exports = function (grunt) {
     uglify: {
       dist: {
         options: {
+          report: 'gzip',
           sourceMap: true,
-          banner: '/*Angular - Simple validator v<%=validator.version%> - <%= validator.homepage %>*/'
+          banner: '/*<%=pkg.name%> v<%=pkg.version%> - <%= pkg.homepage %>*/'
         },
         files: {
-          '<%= validator.dist %>/validator-<%= validator.version %>.min.js': [
-            '<%= validator.dist %>/validator-<%= validator.version %>.js'
+          '<%= validator.dist %>/validator-<%= pkg.version %>.min.js': [
+            '<%= validator.dist %>/validator-<%= pkg.version %>.js'
           ]
         }
       }
