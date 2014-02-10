@@ -9,7 +9,8 @@ module.exports = function (grunt) {
     src: 'src',
     sampleApp: 'sampleapp',
     dist: 'dist',
-    test: 'test'
+    test: 'test',
+    bowerComponents: 'components'
   };
 
   grunt.initConfig({
@@ -62,6 +63,22 @@ module.exports = function (grunt) {
           ]
         }
       }
+    },
+    connect: {
+      options: {
+        port: 9000,
+        hostname: 'localhost',
+        keepalive:true
+      },
+      sampleapp: {
+        options: {
+          base: [
+            validatorConfig.sampleApp,
+            validatorConfig.bowerComponents,
+            validatorConfig.src
+          ]
+        }
+      }
     }
   });
 
@@ -71,5 +88,10 @@ module.exports = function (grunt) {
     'copy:dist',
     'uglify:dist'
   ]);
+
+  grunt.registerTask('sampleapp', [
+    'connect:sampleapp'
+  ]);
+
 
 };
