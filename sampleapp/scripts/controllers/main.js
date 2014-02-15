@@ -2,5 +2,5 @@
 
 angular.module('sampleApp')
   .controller('MainCtrl', function ($scope) {
-    $scope.message = 'Hello world !';
+    $scope.message = 'Sample application for Validator service';
   });

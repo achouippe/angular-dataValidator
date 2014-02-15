@@ -1,0 +1,42 @@
+
+.content {
+	padding: 1em;
+}
+
+fieldset {
+	padding: 2em;
+}
+
+.success {
+	background-color: green;
+	color: white;
+	font-size: 0.8rem;
+	font-style: italic;
+	line-height: 1.5;
+	margin-bottom: 1.25rem;
+	padding: 1em;
+}
+
+.errorBox {
+	background-color: #f04124;
+	color: white;
+}
+.errorBox ul {
+	padding: 1em;
+}
+.errorBox ul li {
+	font-size: 0.8rem;
+	font-style: italic;
+	line-height: 1.5;
+}
+
+.fieldErrorMessage {
+	padding: 0.5em;
+	font-size: 0.8rem;
+	font-style: italic;
+	font-weight: lighter;
+	margin-top: -16px;
+	margin-bottom: 10px;
+	background-color: #f04124;
+	color: white;
+}

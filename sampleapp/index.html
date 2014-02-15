@@ -9,15 +9,28 @@
     <title>Validator sample App</title>
     <meta name="viewport" content="width=device-width">
 
-    <link rel="stylesheet" href="styles/foundation.min.css">
     <link rel="stylesheet" href="styles/normalize.css">
+    <link rel="stylesheet" href="styles/foundation.min.css">
     <link rel="stylesheet" href="styles/main.css">
 
   </head>
   <body ng-app="sampleApp">
-    <div class="container" ng-view></div>
+    <nav class="top-bar" data-topbar>
+      <section class="top-bar-section">
+        <ul>
+          <li class="has-dropdown not-click">
+            <a>Login Forms</a>
+            <ul class="dropdown">
+              <li><a href="#/loginFormTopMessages">With error messages on top</a></li>
+              <li><a href="#/loginFormLocalMessages">With error messages on fields</a></li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+    </nav>
+    <div class="content row" ng-view></div>
 
-    <!-- Angular include -->
+    <!-- Angular includes -->
     <script src="angular/angular.min.js"></script>
     <script src="angular-route/angular-route.min.js"></script>
 
@@ -27,6 +40,7 @@
     <!-- Sample app JS code -->
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/loginForms.js"></script>
 
   </body>
 </html>

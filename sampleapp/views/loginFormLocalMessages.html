@@ -1,0 +1,18 @@
+<p>Login Form with error messages on form fields</p>
+<div class="success" ng-show="message">
+  {{message}}
+</div>
+<form>
+  <fieldset>
+    <legend>Please login</legend>
+    	<label for="loginInput">Login (Email address) <small>required</small></label>
+     	<input id="loginInput" ng-model="login" type="text"/>
+      <div ng-show="errors.login" class="fieldErrorMessage">{{errors.login.message}}</div>
+
+      <label for="passwordInput" >Password <small>required</small></label>
+      <input id="passwordInput" ng-model="password" type="password"/>
+      <div ng-show="errors.password" class="fieldErrorMessage">{{errors.password.message}}</div>
+
+      <button class="medium button green" ng-click="submit()">Submit</button>
+    </fieldset>
+</form>

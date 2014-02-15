@@ -1,0 +1,21 @@
+<p>Login Form with error messages on top</p>
+<div class="success" ng-show="message">
+  {{message}}
+</div>
+<div class="errorBox" ng-show="errors">
+  <ul>
+      <li ng-repeat="error in errors">{{error.message}}</li>
+  </ul>
+</div>
+<form>
+  <fieldset>
+    <legend>Please login</legend>
+    	<label for="loginInput">Login (Email address) <small>required</small></label>
+     	<input id="loginInput" ng-model="login" type="text"/>
+
+      <label for="passwordInput" >Password <small>required</small></label>
+      <input id="passwordInput" ng-model="password" type="password"/>
+
+      <button class="medium button green" ng-click="submit()">Submit</button>
+    </fieldset>
+</form>
