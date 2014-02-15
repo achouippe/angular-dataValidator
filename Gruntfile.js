@@ -23,7 +23,6 @@ module.exports = function (grunt) {
       all: [
         'Gruntfile.js',
         '<%= validator.src %>/*.js',
-        '<%= validator.sampleApp %>/scripts/{,*/}*.js'
       ]
     },
     clean: {
