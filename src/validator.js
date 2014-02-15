@@ -10,6 +10,8 @@ angular.module('validator', []).factory('Validator', ['$q', '$parse', function V
 
   var NUMERICSPACE_REGEX = /^[0-9\s]*$/;
 
+  var SPACE_REGEX = /\s/;
+
   var ALPHANUMERICSPACE_REGEX = /^[a-zA-Z0-9\s]*$/;
 
   function isNotDefined(value) {
@@ -91,6 +93,11 @@ angular.module('validator', []).factory('Validator', ['$q', '$parse', function V
      * Check that field only contains alpha-numeric or space characters
     */
     alphanumSpace : function (value) { return isNotDefined(value) || ALPHANUMERICSPACE_REGEX.test(value); },
+
+    /*
+     * Check that field does not contains space characters
+    */
+    noSpace : function (value) { return isNotDefined(value) || !SPACE_REGEX.test(value); },
 
     /*
      * Check field value is one of the input params: oneOf('toto', 'titi', 'tata')
