@@ -25,10 +25,16 @@
               <li><a href="#/loginFormLocalMessages">With error messages on fields</a></li>
             </ul>
           </li>
+          <li class="has-dropdown not-click">
+            <a>Signup Forms</a>
+            <ul class="dropdown">
+              <li><a href="#/signupForm">With error messages on fields</a></li>
+            </ul>
+          </li>
         </ul>
       </section>
     </nav>
-    <div class="content row" ng-view></div>
+    <div class="content row" style="width:50%" ng-view></div>
 
     <!-- Angular includes -->
     <script src="angular/angular.min.js"></script>
@@ -41,6 +47,7 @@
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/loginForms.js"></script>
+    <script src="scripts/controllers/signupForms.js"></script>
 
   </body>
 </html>

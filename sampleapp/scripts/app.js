@@ -15,6 +15,10 @@ angular.module('sampleApp', ['ngRoute', 'validator'])
         templateUrl: 'views/loginFormLocalMessages.html',
         controller: 'LoginFormCtrl'
       })
+      .when('/signupForm', {
+        templateUrl: 'views/signupForm.html',
+        controller: 'SignupFormCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

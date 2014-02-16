@@ -5,6 +5,19 @@
 
 fieldset {
 	padding: 2em;
+	padding-bottom: 1em;
+}
+
+fieldset > legend {
+	font-size: 1.5em;
+	padding-left:1em;
+	padding-right:1em;
+}
+
+fieldset > h4 {
+	font-size: 1em;
+	font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+	font-weight: 900;
 }
 
 .success {
@@ -31,12 +44,9 @@ fieldset {
 }
 
 .fieldErrorMessage {
-	padding: 0.5em;
 	font-size: 0.8rem;
-	font-style: italic;
-	font-weight: lighter;
-	margin-top: -16px;
-	margin-bottom: 10px;
-	background-color: #f04124;
-	color: white;
+	margin-top: -1em;
+	margin-bottom: 1em;
+	//background-color: #f04124;
+	color: #f04124;
 }

@@ -1,0 +1,68 @@
+<div class="success" ng-show="message">
+  {{message}}
+</div>
+<form>
+  <fieldset class="main">
+    <legend>Sign up</legend>
+    
+    <h4>Tell us about yourself</h4>
+    <div class="row">
+      <div class="large-6 columns">
+        <label for="firstNameInput">First Name <small>required</small></label>
+        <input id="firstNameInput" ng-model="userDetail.firstName" type="text"/>
+        <div ng-show="errors.userDetail.firstName" class="fieldErrorMessage">{{errors.userDetail.firstName.message}}</div>
+      </div>
+      <div class="large-6 columns">
+        <label for="lastNameInput">Last Name <small>required</small></label>
+        <input id="lastNameInput" ng-model="userDetail.lastName" type="text" />
+        <div ng-show="errors.userDetail.lastName" class="fieldErrorMessage">{{errors.userDetail.lastName.message}}</div>
+      </div>
+    </div>
+    <div class="row">
+       <div class="columns">
+        <label for="emailInput">Email address <small>required</small></label>
+        <input id="emailInput" ng-model="userDetail.email" type="text" />
+        <div ng-show="errors.userDetail.email" class="fieldErrorMessage">{{errors.userDetail.email.message}}</div>
+      </div>
+    </div>
+    <div class="row">
+       <div class="columns">
+        <label for="companyInput">Company</label>
+        <input id="companyInput" ng-model="userDetail.company" type="text" />
+        <div ng-show="errors.userDetai.company" class="fieldErrorMessage">{{errors.userDetail.company.message}}</div>
+      </div>
+    </div>
+
+    <h4>Now choose a username and password</h4>
+    <div class="row">
+      <div class="columns">
+        <label for="username">Username <small>required</small></label>
+        <input id="username" ng-model="account.username" type="text"/>
+        <div ng-show="errors.account.username" class="fieldErrorMessage">{{errors.account.username.message}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns">
+        <label for="passwordInput">Password <small>required</small></label>
+        <input id="passwordInput" ng-model="account.password" type="password"/>
+        <div ng-show="errors.account.password" class="fieldErrorMessage">{{errors.account.password.message}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns">
+        <label for="passwordConfirmInput">Enter your password again for verification <small>required</small></label>
+        <input id="passwordConfirmInput" ng-model="account.passwordConfirm" type="password"/>
+        <div ng-show="errors.account.passwordConfirm" class="fieldErrorMessage">{{errors.account.passwordConfirm.message}}</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns">
+        <input ng-model="acceptTerms" id="acceptTermsInput" type="checkbox"/>
+        <label for="acceptTermsInput">I agree the <a href="#/">terms of service</a> <small>required</small></label>
+        <div ng-show="errors.acceptTerms" class="fieldErrorMessage">{{errors.acceptTerms.message}}</div>
+      </div>
+    </div>
+    <button class="medium button green" ng-click="submit()">Join</button>
+ 
+  </fieldset>
+</form>
