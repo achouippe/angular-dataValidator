@@ -117,6 +117,39 @@ angular.module('validator', []).factory('Validator', ['$q', '$parse', function V
       return false;
     },
 
+    /**
+     * Check that field is equal (using === operator) to an expected value: equals(expectedValue) 
+    */
+    equal: function (value, testedValue) {  return isNotDefined(value) || value === testedValue; },
+
+    /**
+     * Check that field is not equal (using === operator) to an expected value: notEquals(expectedValue) 
+    */
+    notEqual: function (value, testedValue) {  return isNotDefined(value) || value !== testedValue; },
+
+    /**
+     * Check that field is equal to true.
+    */
+    isTrue: function (value) { return isNotDefined(value) || value === true; },
+
+    /**
+     * Check that field is equal to false.
+    */
+    isFalse: function (value) { return isNotDefined(value) || value === false; },
+
+    /**
+     * Apply the result of a function execution as a constraint. Usefull to create custom constraint without registering them in the validator service
+     * ```javascript
+     * var rule = validator('Value must be pair').constraint(function(value) {
+     *  return (value % 2) === 0;
+     * });
+     * ```
+    */
+    constraint: function (value, testedValue) {
+      return testedValue;
+    }
+
+
   };
 
   /*
@@ -232,7 +265,7 @@ angular.module('validator', []).factory('Validator', ['$q', '$parse', function V
             message: rule.message,
             options: ruleResult.options
           };
-          // If propName expression match an assignable field -> use $parse
+          // If propName expression match an assignable field -> use $parse assigner
           if (propGetter.assign !== undefined) {
             propGetter.assign(errors, errorObject);
           }
