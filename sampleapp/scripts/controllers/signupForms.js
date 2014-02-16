@@ -26,7 +26,7 @@ angular.module('sampleApp').controller('SignupFormCtrl', function ($scope, Valid
   $scope.submit = function () {
     delete $scope.errors;
     delete $scope.message;
-    console.log($scope.acceptTerms);
+
     validationRules.validate($scope).then(function ok() {
       $scope.message = 'Success !';
     }, function ko(errors) {
