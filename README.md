@@ -1,4 +1,4 @@
-angular-simpleValidator
+angular-dataValidator
 =======================
 
-Simple controller-side validator for AngularJS.
+Controller-side validator for AngularJS.
