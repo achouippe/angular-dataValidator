@@ -95,6 +95,11 @@ module.exports = function (grunt) {
     'uglify:dist'
   ]);
 
+  grunt.registerTask('test', [
+    'jshint',
+    'karma:unit'
+  ]);
+
   grunt.registerTask('sampleapp', [
     'connect:sampleapp'
   ]);
