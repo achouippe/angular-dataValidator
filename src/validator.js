@@ -162,14 +162,17 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
   };
 
   // For each constraintfunction, construct a "chain invocation style function" for RuleClass
-  function constructRuleClassFunction(checkName) {
+  function constructRuleClassFunction(constraintName) {
     return function () {
       var args = Array.prototype.slice.call(arguments);
-      this.rules.push({
-        check: checkName,
-        fct: constraintFunctions[checkName],
-        options: args
-      });
+      var rule = {
+        constraint: constraintName,
+        fct: constraintFunctions[constraintName]
+      };
+      if (args.length) {
+        rule.args = args;
+      }
+      this.rules.push(rule);
       return this;
     };
   }
@@ -189,11 +192,11 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
 
       // Construct arguments of the called check function
       var args = [value];
-      for (var j in rule.options) {
-        if (typeof rule.options[j] === 'function') {
-          args.push(rule.options[j](value));
+      for (var j in rule.args) {
+        if (typeof rule.args[j] === 'function') {
+          args.push(rule.args[j](value));
         } else {
-          args.push(rule.options[j]);
+          args.push(rule.args[j]);
         }
       }
 
@@ -213,12 +216,18 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
     var result = this.check(value);
 
     if (result !== undefined) {
-      deferred.reject({
-        message: this.message,
-        check: result.check,
-        options: result.options,
+      var error = {
+        constraint: result.constraint,
+        args: result.args,
         value: value
-      });
+      };
+
+      if (typeof this.message === 'function') {
+        error.message = this.message(value);
+      } else {
+        error.message = this.message;
+      }
+      deferred.reject(error);
     } else {
       deferred.resolve();
     }
@@ -292,7 +301,7 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
     Validator service
   */
   var Validator = function (arg) {
-    if (typeof arg === 'string') {
+    if (typeof arg === 'string' || typeof arg === 'function') {
       return new RuleClass(arg);
     } else if (typeof arg === 'object') {
       return new RuleSetClass(arg);
