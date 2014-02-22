@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('sampleApp', ['ngRoute', 'validator'])
+angular.module('sampleApp', ['ngRoute', 'dataValidator'])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
