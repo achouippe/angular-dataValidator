@@ -43,9 +43,20 @@ describe(' dataValidator /', function () {
   describe('Simple fields validation /', function() {
     
     it('should always success for empty rules', function() {
-      var empty = Validator('Empty rule');
+      var empty = Validator();
       expectSuccess(empty.validate('foo bar'));
       expectSuccess(empty.validate(undefined));
+    });
+
+    it('should accept validator construction without error messages', function() {
+      var empty = Validator().required();
+      expectSuccess(empty.validate('foo bar'));
+      expectFail(empty.validate(undefined), function(error) {
+        expect(error.value).not.toBeDefined();
+        expect(error.message).not.toBeDefined();
+        expect(error.constraint).toEqual('required');
+        expect(error.args).not.toBeDefined();
+      });
     });
 
     it('should apply all the registered constraints until one fails', function () {
