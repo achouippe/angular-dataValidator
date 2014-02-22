@@ -78,11 +78,18 @@ module.exports = function (grunt) {
           ]
         }
       }
+    },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js',
+        singleRun: true
+      }
     }
   });
 
   grunt.registerTask('build', [
     'jshint',
+    'karma:unit',
     'clean:dist',
     'copy:dist',
     'uglify:dist'
