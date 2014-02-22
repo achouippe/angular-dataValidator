@@ -186,7 +186,8 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
   * Apply all the registered constraints to the input value, 
   * returns undefined if all constraints are ok, else returns the rule object that was not validated
   */
-  RuleClass.prototype.check = function (value) {
+  RuleClass.prototype.check = function (value, mainObject) {
+
     for (var i = 0; i < this.rules.length; i++) {
       var rule = this.rules[i];
 
@@ -194,14 +195,29 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
       var args = [value];
       for (var j in rule.args) {
         if (typeof rule.args[j] === 'function') {
-          args.push(rule.args[j](value));
+          args.push(rule.args[j](value, mainObject));
         } else {
           args.push(rule.args[j]);
         }
       }
 
       if (!rule.fct.apply(null, args)) {
-        return rule;
+        var error = {
+          constraint: rule.constraint,
+          value: value
+        };
+
+        if (args.length > 1) {
+          error.args = args.slice(1);
+        }
+
+        if (typeof this.message === 'function') {
+          error.message = this.message(value, mainObject);
+        } else {
+          error.message = this.message;
+        }
+
+        return error;
       }
     }
   };
@@ -216,18 +232,7 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
     var result = this.check(value);
 
     if (result !== undefined) {
-      var error = {
-        constraint: result.constraint,
-        args: result.args,
-        value: value
-      };
-
-      if (typeof this.message === 'function') {
-        error.message = this.message(value);
-      } else {
-        error.message = this.message;
-      }
-      deferred.reject(error);
+      deferred.reject(result);
     } else {
       deferred.resolve();
     }
@@ -242,11 +247,7 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
     this.ruleSet = ruleSet;
   };
 
-  /*
-  * Validate an object, and returns a promise
-  */
-  RuleSetClass.prototype.validate = function (object) {
-    var deferred = $q.defer();
+  RuleSetClass.prototype.check = function(object) {
     var errors = {};
     var inError = false;
 
@@ -263,32 +264,37 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
 
       for (var i in rules) {
         var rule = rules[i];
-        var ruleResult = rule.check(propValue);
+        var error = rule.check(propValue, object);
 
-        if (ruleResult !== undefined) {
+        if (error !== undefined) {
           inError = true;
-          var errorObject = {
-            check: ruleResult.check,
-            field: propName,
-            value: propValue,
-            message: rule.message,
-            options: ruleResult.options
-          };
           // If propName expression match an assignable field -> use $parse assigner
           if (propGetter.assign !== undefined) {
-            propGetter.assign(errors, errorObject);
+            propGetter.assign(errors, error);
           }
           // Else directly assign it to errors object
           else {
-            errors[propName] = errorObject;
+            errors[propName] = error;
           }
-
           break;
         }
       }
     }
+    if (inError) {
+      return errors;
+    }
+  };
 
-    if (inError > 0) {
+
+  /*
+  * Validate an object, and returns a promise
+  */
+  RuleSetClass.prototype.validate = function (object) {
+    var deferred = $q.defer();
+
+    var errors = this.check(object);
+
+    if (errors !== undefined) {
       deferred.reject(errors);
     } else {
       deferred.resolve();
@@ -301,12 +307,10 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
     Validator service
   */
   var Validator = function (arg) {
-    if (typeof arg === 'string' || typeof arg === 'function') {
-      return new RuleClass(arg);
-    } else if (typeof arg === 'object') {
+    if (typeof arg === 'object') {
       return new RuleSetClass(arg);
-    } else {
-      return undefined;
+    } else if (arg === undefined || typeof arg === 'string' || typeof arg === 'function' ) {
+      return new RuleClass(arg);
     }
   };
 

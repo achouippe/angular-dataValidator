@@ -94,7 +94,46 @@ describe(' dataValidator /', function () {
       expectFail(rule.validate(42), function(error) {
         expect(error.message).toEqual('42 is not a valid input');
       });
-    })
+    });
+
+    it('should accept function as constraint arguments', function() {
+      var minBoundary = 0;
+      var maxBoundary = 5;
+
+      var rule = Validator('Function test').required().min(function() {return minBoundary}).max(function () {return maxBoundary});
+
+      expectSuccess(rule.validate(3));
+
+      minBoundary = 10;
+      maxBoundary = 50;
+
+      expectFail(rule.validate(4), function(error) {
+        expect(error.constraint).toEqual('min');
+        expect(error.args[0]).toEqual(10);
+      });
+
+      expectFail(rule.validate(100), function(error) {
+        expect(error.constraint).toEqual('max');
+        expect(error.args[0]).toEqual(50);
+      });
+
+    });
+
+    it('should pass tested values to functions', function() {
+
+      var rule = Validator('Function test').required().min(function(value) {return value * 2});
+
+      expectFail(rule.validate(4), function(error) {
+        expect(error.constraint).toEqual('min');
+        expect(error.args[0]).toEqual(8);
+      });
+
+      expectFail(rule.validate(100), function(error) {
+        expect(error.constraint).toEqual('min');
+        expect(error.args[0]).toEqual(200);
+      });
+
+    });
 
   });
 
