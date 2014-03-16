@@ -120,12 +120,12 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
     /**
      * Check that field is equal (using === operator) to an expected value: equals(expectedValue) 
     */
-    equal: function (value, testedValue) {  return isNotDefined(value) || value === testedValue; },
+    equals: function (value, testedValue) {  return isNotDefined(value) || angular.equals(value,testedValue); },
 
     /**
      * Check that field is not equal (using === operator) to an expected value: notEquals(expectedValue) 
     */
-    notEqual: function (value, testedValue) {  return isNotDefined(value) || value !== testedValue; },
+    notEqual: function (value, testedValue) {  return isNotDefined(value) || !angular.equals(value,testedValue); },
 
     /**
      * Check that field is equal to true.

@@ -19,7 +19,7 @@ describe(' dataValidator /', function () {
   }));
 
 
-  // Checks that the promise rejects
+  // Checks that the promise is in success
   function expectSuccess (validationPromise) {
     validationPromise.then(function () {
       // Nothing here
@@ -28,7 +28,7 @@ describe(' dataValidator /', function () {
     });
   };
 
-  // Checks that the promise rejects
+  // Checks that the promise is in error
   function expectFail (validationPromise, errorCallback) {
     validationPromise.then(function () {
       throw 'Validation should fail here.';
@@ -95,7 +95,7 @@ describe(' dataValidator /', function () {
       });
     });
 
-    describe('Simple fields validation / Functions handling /', function() {
+    describe('Function handling /', function() {
 
       it('should accept error messages returned by functions', function() {
         var rule = Validator(function(value) { return value + ' is not a valid input'}).required().min(4).max(10);
@@ -153,7 +153,74 @@ describe(' dataValidator /', function () {
   });
 
   describe('objects validation', function() {
-    // TODO
+    
+    it('should check all the input rules', function() {
+      var rule = Validator({
+        'login': Validator('Login is required').required(),
+        'password': Validator('Password is required').required()
+      });
+
+      var credentials = {
+        login: 'login',
+        password: 'password'
+      };
+
+      expectSuccess(rule.validate(credentials));
+
+      delete credentials.login;
+
+      expectFail(rule.validate(credentials), function(errors) {
+          expect(errors.login).toBeDefined();
+          expect(errors.login.message).toEqual('Login is required');
+          expect(errors.login.constraint).toEqual('required');
+      });
+
+      delete credentials.password;
+
+      expectFail(rule.validate(credentials), function(errors) {
+          expect(errors.login).toBeDefined();
+          expect(errors.login.message).toEqual('Login is required');
+          expect(errors.password.constraint).toEqual('required');
+          expect(errors.password).toBeDefined();
+          expect(errors.password.message).toEqual('Password is required');
+          expect(errors.password.constraint).toEqual('required');
+      });
+
+    });
+
+    it('should allow complex $parse expressions', function() {
+      var rule = Validator({
+        'login || email': Validator('A login or email address is required').required(),
+        'email': Validator(function(value) { return value + ' is not a valid email address';}).email(),
+        'password': Validator('Password is required').required()
+      });
+
+      var credentials = {
+        login: 'login',
+        password: 'password'
+      };
+
+      expectSuccess(rule.validate(credentials));
+
+      delete credentials.login;
+      expectFail(rule.validate(credentials), function(errors) {
+          expect(errors['login || email']).toBeDefined();
+          expect(errors['login || email'].message).toEqual('A login or email address is required');
+          expect(errors['login || email'].constraint).toEqual('required');
+      });
+
+      credentials.email = 'email';
+      expectFail(rule.validate(credentials), function(errors) {
+          expect(errors.email).toBeDefined();
+          expect(errors.email.message).toEqual('email is not a valid email address');
+          expect(errors.email.constraint).toEqual('email');
+      });
+
+      credentials.email = 'email@domain.com';
+      expectSuccess(rule.validate(credentials));
+
+    });
+
   });
 
   describe('Builtin constraint', function () {
@@ -519,7 +586,129 @@ describe(' dataValidator /', function () {
       });
     });
 
-    // TODO complete for isTrue, isFalse, equal, notEqual and constraint
+    describe('isTrue', function() {
+      it('should success on undefined or null values', function () {
+        expectSuccess(Validator('error').isTrue().validate(null));
+        expectSuccess(Validator('error').isTrue().validate(undefined));
+      });
+
+      it('should only success on true if value is defined', function () {
+        var rule = Validator('error').isTrue();
+        expectSuccess(rule.validate(true));
+        expectFail(rule.validate({}));
+        expectFail(rule.validate({foo:'bar'}));
+        expectFail(rule.validate([]));
+        expectFail(rule.validate([1,2]));
+        expectFail(rule.validate(false));
+      });
+
+    });
+
+    describe('isFalse', function() {
+      it('should success on undefined or null values', function () {
+        expectSuccess(Validator('error').isFalse().validate(null));
+        expectSuccess(Validator('error').isFalse().validate(undefined));
+      });
+
+      it('should only success on false if value is defined', function () {
+        var rule = Validator('error').isFalse();
+        expectSuccess(rule.validate(false));
+        expectFail(rule.validate({}));
+        expectFail(rule.validate({foo:'bar'}));
+        expectFail(rule.validate([]));
+        expectFail(rule.validate([1,2]));
+        expectFail(rule.validate(true));
+      });
+
+    });
+
+    describe('equals', function() {
+      it('should success on undefined or null values', function () {
+        expectSuccess(Validator('error').equals(42).validate(null));
+        expectSuccess(Validator('error').equals(42).validate(undefined));
+      });
+
+      it('should handle numerics', function() {
+        expectSuccess(Validator('error').equals(42).validate(42));
+        expectSuccess(Validator('error').equals(42).validate(21 * 2));
+        expectFail(Validator('error').equals(42).validate('42'));
+      });
+
+      it('should handle booleans', function() {
+        expectSuccess(Validator('error').equals(true).validate(true));
+        expectFail(Validator('error').equals(true).validate(false));
+        expectFail(Validator('error').equals(true).validate(42));
+      });
+
+      it('should handle strings', function() {
+        expectSuccess(Validator('error').equals('foo').validate('foo'));
+        expectSuccess(Validator('error').equals('foo').validate('f' + 'oo'));
+        expectFail(Validator('error').equals('foo').validate('bar'));
+        expectFail(Validator('error').equals('foo').validate(['bar']));
+      });
+
+      it('should handle objects', function() {
+        expectSuccess(Validator('error').equals({foo:'bar'}).validate({foo:'bar'}));
+        expectSuccess(Validator('error').equals({foo:'bar'}).validate({foo:'b' + 'ar'}));
+        expectFail(Validator('error').equals({bar:'foo'}).validate({foo:'bar'}));
+      });
+
+      it('should handle arrays', function() {
+        expectSuccess(Validator('error').equals(['foo', 'bar']).validate(['foo', 'bar']));
+        expectFail(Validator('error').equals(['foo', 'bar']).validate(['foo']));
+      });
+
+    });
+
+    describe('notEqual', function() {
+      it('should success on undefined or null values', function () {
+        expectSuccess(Validator('error').notEqual(42).validate(null));
+        expectSuccess(Validator('error').notEqual(42).validate(undefined));
+      });
+
+      it('should handle numerics', function() {
+        expectFail(Validator('error').notEqual(42).validate(42));
+        expectFail(Validator('error').notEqual(42).validate(21 * 2));
+        expectSuccess(Validator('error').notEqual(42).validate('42'));
+      });
+
+      it('should handle booleans', function() {
+        expectFail(Validator('error').notEqual(true).validate(true));
+        expectSuccess(Validator('error').notEqual(true).validate(false));
+        expectSuccess(Validator('error').notEqual(true).validate(42));
+      });
+
+      it('should handle strings', function() {
+        expectFail(Validator('error').notEqual('foo').validate('foo'));
+        expectFail(Validator('error').notEqual('foo').validate('f' + 'oo'));
+        expectSuccess(Validator('error').notEqual('foo').validate('bar'));
+        expectSuccess(Validator('error').notEqual('foo').validate(['bar']));
+      });
+
+      it('should handle objects', function() {
+        expectFail(Validator('error').notEqual({foo:'bar'}).validate({foo:'bar'}));
+        expectFail(Validator('error').notEqual({foo:'bar'}).validate({foo:'b' + 'ar'}));
+        expectSuccess(Validator('error').notEqual({bar:'foo'}).validate({foo:'bar'}));
+      });
+
+      it('should handle arrays', function() {
+        expectFail(Validator('error').notEqual(['foo', 'bar']).validate(['foo', 'bar']));
+        expectSuccess(Validator('error').notEqual(['foo', 'bar']).validate(['foo']));
+      });
+
+    });
+
+    describe('constraint', function() {
+
+      it('should allow custom constraint functions', function() {
+        var rule = Validator('Input must be even number').constraint(function(value) {return value %2 === 0;});
+
+        expectSuccess(rule.validate(0));
+        expectSuccess(rule.validate(42));
+        expectFail(rule.validate(23));
+      });
+
+    });
 
   });
 
