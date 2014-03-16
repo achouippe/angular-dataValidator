@@ -7,8 +7,8 @@
 
 ### Workspace configuration
 
-- Install nodeJs, Grunt and bower,
-- Run the following comand lines to donwload nodeJS and bower components:
+- Install [NodeJs](http://nodejs.org/), [Grunt](http://gruntjs.com/) and [Bower](http://bower.io/),
+- Run the following comand lines to donwload NodeJS and Bower components:
 ```
 npm install
 bower install
