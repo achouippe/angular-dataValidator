@@ -1,6 +1,6 @@
 {
   "name": "angular-dataValidator",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/achouippe/angular-dataValidator",
   "description": "Controller-side validator service for AngularJS",
   "main": "src/validator.js",

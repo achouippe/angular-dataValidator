@@ -1,4 +1,4 @@
-# angular-dataValidator v0.0.1
+# angular-dataValidator v0.0.2
 
 > Controller-side validator for AngularJS.
 
