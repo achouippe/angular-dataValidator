@@ -42,10 +42,10 @@ module.exports = function (grunt) {
           expand: true,
           flatten: true,
           dest: '<%= validator.dist %>/',
-          src: '<%= validator.src %>/validator.js',
+          src: '<%= validator.src %>/validator.js'/*,
           rename: function(dest, src) {
             return dest + src.replace(/\./, '-<%=pkg.version%>.');
-          }
+          }*/
         }]
       }
     },
@@ -57,10 +57,20 @@ module.exports = function (grunt) {
           banner: '/*<%=pkg.name%> v<%=pkg.version%> - <%= pkg.homepage %>*/'
         },
         files: {
-          '<%= validator.dist %>/validator-<%= pkg.version %>.min.js': [
-            '<%= validator.dist %>/validator-<%= pkg.version %>.js'
+          '<%= validator.dist %>/validator-min.js': [
+            '<%= validator.dist %>/validator.js'
           ]
         }
+      }
+    },
+    compress: {
+      dist: {
+        options: {
+          archive: 'downloads/validator-<%=pkg.version%>.zip'
+        },
+        files: [
+          {src: ['dist/*'], dest:'/'}
+        ]
       }
     },
     connect: {
@@ -92,7 +102,8 @@ module.exports = function (grunt) {
     'karma:unit',
     'clean:dist',
     'copy:dist',
-    'uglify:dist'
+    'uglify:dist',
+    'compress:dist'
   ]);
 
   grunt.registerTask('test', [
