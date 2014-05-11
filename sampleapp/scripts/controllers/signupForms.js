@@ -18,7 +18,7 @@ angular.module('sampleApp').controller('SignupFormCtrl', function ($scope, Valid
     ],
     'account.passwordConfirm': [
       Validator('Please confirm your password').required(),
-      Validator('Entered password do not match').equals(function() {return $scope.account.password; })
+      Validator('Entered passwords do not match').equals(function() {return $scope.account.password; })
     ],
     'acceptTerms': Validator('You must agree the terms of service to sign up').required().isTrue()
   });
