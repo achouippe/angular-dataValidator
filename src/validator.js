@@ -118,12 +118,12 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
     },
 
     /**
-     * Check that field is equal (using === operator) to an expected value: equals(expectedValue) 
+     * Check that field is equal (using === operator) to an expected value: equals(expectedValue)
     */
     equals: function (value, testedValue) {  return isNotDefined(value) || angular.equals(value,testedValue); },
 
     /**
-     * Check that field is not equal (using === operator) to an expected value: notEquals(expectedValue) 
+     * Check that field is not equal (using === operator) to an expected value: notEquals(expectedValue)
     */
     notEqual: function (value, testedValue) {  return isNotDefined(value) || !angular.equals(value,testedValue); },
 
@@ -183,7 +183,12 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
 
 
   /*
-  * Apply all the registered constraints to the input value, 
+  * Prototype of all the error objects
+  */
+  var ErrorClass = function() {};
+
+  /*
+  * Apply all the registered constraints to the input value,
   * returns undefined if all constraints are ok, else returns the rule object that was not validated
   */
   RuleClass.prototype.check = function (value, mainObject) {
@@ -202,10 +207,9 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
       }
 
       if (!rule.fct.apply(null, args)) {
-        var error = {
-          constraint: rule.constraint,
-          value: value
-        };
+        var error = new ErrorClass();
+        error.constraint = rule.constraint;
+        error.value = value;
 
         if (args.length > 1) {
           error.args = args.slice(1);
@@ -248,7 +252,7 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
   };
 
   RuleSetClass.prototype.check = function(object) {
-    var errors = {};
+    var errors = new ErrorClass();
     var inError = false;
 
     for (var propName in this.ruleSet) {
@@ -313,6 +317,14 @@ angular.module('dataValidator', []).factory('Validator', ['$q', '$parse', functi
       return new RuleClass(arg);
     }
   };
+
+  /*
+  * Defines if the input object is an error object returned by rule.check or rule.validate
+  */
+  Validator.isError = function(errorObject) {
+    return errorObject !== undefined && errorObject !== null && errorObject.constructor === ErrorClass;
+  };
+
 
   return Validator;
 

@@ -41,7 +41,7 @@ describe(' dataValidator /', function () {
   });
 
   describe('Simple fields validation /', function() {
-    
+
     it('should always success for empty rules', function() {
       var empty = Validator();
       expectSuccess(empty.validate('foo bar'));
@@ -152,8 +152,61 @@ describe(' dataValidator /', function () {
 
   });
 
+  describe('Validator.isError /', function() {
+
+    it('should return false for undefined or null objects', function() {
+      expect(Validator.isError()).toBe(false);
+      expect(Validator.isError(null)).toBe(false);
+    });
+
+    it('should return false for non error objects', function() {
+      expect(Validator.isError(true)).toBe(false);
+      expect(Validator.isError({})).toBe(false);
+    });
+
+    it('should return true for error object on simple fields', function() {
+      var rule = Validator('Simple rule').minLength(42);
+
+      var error = rule.check('foobar');
+      expect(Validator.isError(error)).toBe(true);
+
+    });
+
+    it('should return true for root error object on objects', function() {
+      var test = {
+        foo: 'bar',
+        bar: 'foo'
+      };
+      var rule = Validator({
+        foo: Validator('Foo is required').required(),
+        bar: Validator('Bar min length is 42').minLength(42)
+      });
+
+      var error = rule.check(test);
+      expect(Validator.isError(error)).toBe(true);
+    });
+
+    it('should return true for leaf error object on objects', function() {
+      var test = {
+        foo: 'bar',
+        bar: 'foo'
+      };
+      var rule = Validator({
+        foo: Validator('Foo is required').required(),
+        bar: Validator('Bar min length is 42').minLength(42)
+      });
+
+      var error = rule.check(test);
+      expect(Validator.isError(error.foo)).toBe(false);
+      expect(Validator.isError(error.bar)).toBe(true);
+    })
+
+
+
+  })
+
   describe('objects validation', function() {
-    
+
     it('should check all the input rules', function() {
       var rule = Validator({
         'login': Validator('Login is required').required(),
@@ -225,7 +278,7 @@ describe(' dataValidator /', function () {
 
   describe('Builtin constraint', function () {
 
-    // required    
+    // required
     describe('required', function () {
       it('should success on strings', function () {
         expectSuccess(Validator('error').required().validate('foo'));
